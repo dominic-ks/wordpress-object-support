@@ -1,0 +1,19 @@
+{
+    "name": "bdvs/wordpress-object-support",
+    "description": "Class based development toolkit for WordPress plugins",
+    "type": "library",
+    "license": "Apache 2.0",
+    "authors": [
+        {
+            "name": "contact",
+            "email": "contact@bedevious.co.uk"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+      "psr-4": {
+        "Wordpress_Object_Support\\": "/src/Wordpress_Object_Support"
+      }
+    },
+    "require": {}
+}
