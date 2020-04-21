@@ -1,4 +1,0 @@
-[submodule "src/Wordpress_Object_Support/legacy/toolset-object-support"]
-	path = src/Wordpress_Object_Support/legacy/toolset-object-support
-	url = https://github.com/dominic-ks/toolset-object-support.git
-	branch = 0.3.1
