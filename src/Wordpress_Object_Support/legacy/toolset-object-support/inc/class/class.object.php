@@ -721,7 +721,7 @@ class BDTOS_Object {
     }
     
     //first clear the cache for this object
-    $sql = "DELETE  FROM `wp_postmeta` WHERE `post_id` = " . $this->ID . " AND `meta_key` LIKE '%bdtos-cache-%'";
+    $sql = "DELETE  FROM `" . $wpdb->prefix . "postmeta` WHERE `post_id` = " . $this->ID . " AND `meta_key` LIKE '%bdtos-cache-%'";
     $wpdb->query( $sql );
     
     //then initiate the same for it's parents
