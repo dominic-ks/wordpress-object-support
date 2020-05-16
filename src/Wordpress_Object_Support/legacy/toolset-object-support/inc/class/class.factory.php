@@ -384,7 +384,32 @@ class BDTOS_Factory {
           },
 
           'update_callback' => function( $value , $post , $fieldname ) {
-            return new WP_Error( 'relationship_error' , 'You cannot update Toolset custom fields via Toolset Object Support REST API functionality' , array( 'status' => 404 ));
+          
+            /**
+            *
+            * Filter to allow disabling the updating of auto-registered meta fields in the API
+            *
+            **/
+
+            if( ! apply_filters( 'bdtos_allow_api_field_update' , true , $fieldname ) ) {
+              return new WP_Error( 'relationship_error' , 'You cannot update the field "' . $fieldname . '" directly' , array( 'status' => 404 ) );
+            }
+            
+            $fields = $this->get_fields_by_post_type( get_post_type( $post ));
+            $base_fieldname = str_replace( '_' , '-' , $fieldname );
+            $field = $fields[ $base_fieldname ];
+            $field_type = $field['type'];
+            $key = $field['meta_key'];
+
+            if( $field_type === 'boolean' || ( is_array( $field_type ) && in_array( 'boolean' , $field_type ) ) ) {
+              $value = ( $value ) ? '1' : '0';
+            }
+
+            do_action( 'bdtos_update_' . $fieldname . '_meta_field' , $post , $value );
+
+            // @todo we need to sanitize this value
+            return update_post_meta( $post->ID , $key , $value );
+            
           },
 
           'schema' => array(
@@ -498,3 +523,28 @@ class BDTOS_Factory {
 }
 
 $bdtos_factory = new BDTOS_Factory;
+
+
+
+
+/**
+*
+* Get BDTOS Object
+*
+**/
+
+if( ! function_exists ( 'bdtos_get_bdtos' )) {
+  function bdtos_get_bdtos( $id ) {
+
+    $types = apply_filters( 'bdtos_object_types' , array() );
+
+    $type = 'BDTOS_Object';
+
+    if( isset( $types[ get_post_type( $id ) ] ) ) {
+      $type = $types[ get_post_type( $id ) ];
+    }
+
+    return new $type( $id );
+
+  }
+}
